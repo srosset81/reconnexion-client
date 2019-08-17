@@ -1,0 +1,33 @@
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "eject": "expo eject",
+    "optimize": "expo optimize",
+    "prettier": "prettier --single-quote --print-width 120 --write --ignore-path .gitignore '{.,components,config,elements,hooks,screens}/**/*.js'"
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^9.0.0",
+    "expo": "^33.0.0",
+    "expo-constants": "~5.0.1",
+    "expo-font": "~5.0.1",
+    "expo-linear-gradient": "~5.0.1",
+    "expo-permissions": "~5.0.1",
+    "expo-web-browser": "~5.0.2",
+    "moment": "^2.24.0",
+    "prettier": "^1.18.2",
+    "react": "16.8.3",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
+    "react-native-render-html": "^4.1.2",
+    "react-navigation": "^3.11.0expo -",
+    "react-redux": "^7.1.0",
+    "redux": "^4.0.1",
+    "styled-components": "^4.1.3"
+  },
+  "devDependencies": {
+    "babel-preset-expo": "^5.0.0"
+  },
+  "private": true
+}
