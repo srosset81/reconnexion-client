@@ -4,6 +4,9 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
+    "build:ios": "expo build:ios",
+    "build:ios-simulator": "expo build:ios -t simulator",
+    "build:android": "expo build:android",
     "eject": "expo eject",
     "optimize": "expo optimize",
     "prettier": "prettier --single-quote --print-width 120 --write --ignore-path .gitignore '{.,components,config,elements,hooks,screens}/**/*.js'"

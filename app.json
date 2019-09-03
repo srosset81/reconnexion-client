@@ -35,8 +35,9 @@
       "permissions": []
     },
     "ios": {
-      "supportsTablet": false,
-      "bundleIdentifier": "app.reconnexion.payscreillois"
+      "bundleIdentifier": "app.reconnexion.payscreillois",
+      "icon": "./assets/icon-no-transparency.png",
+      "supportsTablet": false
     }
   }
 }
