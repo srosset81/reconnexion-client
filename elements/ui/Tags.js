@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TouchableWithoutFeedback, View } from 'react-native';
+import { Text, View } from 'react-native';
 import styled from 'styled-components/native';
 import { withNavigation } from 'react-navigation';
 
@@ -16,9 +16,9 @@ const Tags = ({ tags, navigation }) =>
   tags && (
     <View style={{ flexDirection: 'row', marginTop: 7 }}>
       {tags.map((tag, i) => (
-        <TouchableWithoutFeedback key={i} onPress={() => navigation.push('List', { tag: tag.name })}>
-          <Tag>{tag.name}</Tag>
-        </TouchableWithoutFeedback>
+        // <TouchableWithoutFeedback key={i} onPress={() => navigation.push('List', { tag: tag.name })}>
+        <Tag key={i}>{tag.name}</Tag>
+        // </TouchableWithoutFeedback>
       ))}
     </View>
   );
