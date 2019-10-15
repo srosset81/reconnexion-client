@@ -21,7 +21,8 @@
     },
     "notification": {
       "icon": "./assets/icon-notification.png",
-      "color": "#bdc900"
+      "color": "#bdc900",
+      "iosDisplayInForeground": true
     },
     "updates": {
       "fallbackToCacheTimeout": 0

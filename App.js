@@ -56,6 +56,9 @@ class App extends React.Component {
     let route = {};
     console.log('Notification received', notification);
 
+    // Don't do anything if origin is 'received', because it makes iOS crash
+    // https://stackoverflow.com/questions/52014006/expo-push-notifications-when-app-is-in-foreground-it-crashes-ios
+    // https://github.com/expo/expo/pull/4802
     if (notification.origin === 'selected' && this.navigator) {
       switch (notification.data.type) {
         case 'activity.create':
