@@ -10,16 +10,20 @@ import { Status, Tags, Location } from '../elements/ui';
 import { Block, LimitedView } from '../elements/layout';
 
 import { capitalizeFirstChar } from '../functions';
+import FollowButton from './FollowButton';
 
-const ObjectPreview = ({ objectId, navigation }) => {
+const ObjectPreview = ({ objectId, navigation, user }) => {
   const data = useSelector(state => state.queries[objectId].data);
+  const viewDetails = () => navigation.navigate('Details', { objectId: data.id });
   return (
-    <TouchableWithoutFeedback onPress={() => navigation.navigate('Details', { objectId: data.id })}>
-      <Block>
-        {data.image && (
+    <Block>
+      {data.image && (
+        <TouchableWithoutFeedback onPress={viewDetails}>
           <ImageBackground source={{ uri: data.image }} style={{ width: '100%', height: 120 }} resizeMode="cover" />
-        )}
-        <View style={{ padding: 15 }}>
+        </TouchableWithoutFeedback>
+      )}
+      <TouchableWithoutFeedback onPress={viewDetails}>
+        <View style={{ padding: 15, paddingBottom: 5 }}>
           <Title>{capitalizeFirstChar(data.name)}</Title>
           {data.type === 'Project' && (
             <View style={{ flexDirection: 'row', marginTop: 7, marginBottom: 7 }}>
@@ -44,8 +48,13 @@ const ObjectPreview = ({ objectId, navigation }) => {
           )}
           {data.tag && <Tags tags={data.tag} />}
         </View>
-      </Block>
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+      {user && (
+        <View style={{ padding: 15, paddingTop: 0 }}>
+          <FollowButton actor={data} user={user} />
+        </View>
+      )}
+    </Block>
   );
 };
 

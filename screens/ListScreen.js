@@ -8,9 +8,11 @@ import { Loader } from '../elements/ui';
 import useQuery from '../hooks/useQuery';
 import { SERVER_URL, MAIN_ACTOR, APP_NAME } from '../constants';
 import UserConnection from '../components/UserConnection';
+import useLoggedUser from '../hooks/useLoggedUser';
 
 const ListScreen = ({ navigation }) => {
   const { data, loading, error } = useQuery(SERVER_URL + MAIN_ACTOR);
+  const { user } = useLoggedUser();
   const selectedTag = navigation.getParam('tag');
   return (
     <Page>
@@ -22,7 +24,7 @@ const ListScreen = ({ navigation }) => {
       </View>
       {loading && <Loader />}
       {error && <Text>{error.message}</Text>}
-      {data && data.map(objectId => <ObjectPreview key={objectId} objectId={objectId} />)}
+      {user && data && data.map(objectId => <ObjectPreview key={objectId} objectId={objectId} user={user} />)}
     </Page>
   );
 };

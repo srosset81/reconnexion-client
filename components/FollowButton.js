@@ -3,7 +3,7 @@ import { followActor, unfollowActor } from '../functions';
 import { Button } from '../elements/button';
 import useQuery from '../hooks/useQuery';
 
-const FollowButton = ({ actor, user }) => {
+const FollowButton = ({ actor, user, color }) => {
   const [isFollowing, setIsFollowing] = useState(false);
 
   const actorId = actor.type === 'Note' ? actor.attributedTo : actor.id;
@@ -17,6 +17,7 @@ const FollowButton = ({ actor, user }) => {
           setIsFollowing(false);
           await unfollowActor(actorId);
         }}
+        color={color}
       >
         Ne plus suivre
       </Button>
@@ -28,6 +29,7 @@ const FollowButton = ({ actor, user }) => {
           setIsFollowing(true);
           await followActor(actorId);
         }}
+        color={color}
       >
         Suivre
       </Button>
