@@ -80,7 +80,7 @@ const DetailsScreen = ({ navigation }) => {
             ) : (
               <View style={{ height: 7 }} />
             )}
-            <FollowButton actor={data} user={user} />
+            {user && <FollowButton actor={data} user={user} />}
             {data.url && <Button onPress={() => openBrowser(data.url)}>Plus d'informations</Button>}
           </View>
           {data.type === 'Project' && <NewsList parentId={data.id} />}

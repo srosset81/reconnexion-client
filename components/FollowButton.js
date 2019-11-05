@@ -1,20 +1,37 @@
-import React from 'react';
-import { followActor } from '../functions';
+import React, { useState } from 'react';
+import { followActor, unfollowActor } from '../functions';
 import { Button } from '../elements/button';
 import useQuery from '../hooks/useQuery';
 
 const FollowButton = ({ actor, user }) => {
+  const [isFollowing, setIsFollowing] = useState(false);
+
   const actorId = actor.type === 'Note' ? actor.attributedTo : actor.id;
-  const { data, loading } = useQuery(actorId + '/followers');
+  const { data } = useQuery(user.url + '/following');
+  if (!isFollowing && data && data.includes(actorId)) setIsFollowing(true);
 
-  const numFollowers = data ? data.length : 0;
-
-  if (!data || !user || !data.includes(user.url)) {
+  if (isFollowing) {
     return (
-      <Button onPress={() => followActor(actorId)}>{numFollowers > 0 ? `Suivre (${numFollowers})` : 'Suivre'}</Button>
+      <Button
+        onPress={async () => {
+          setIsFollowing(false);
+          await unfollowActor(actorId);
+        }}
+      >
+        Ne plus suivre
+      </Button>
     );
   } else {
-    return <Button>{numFollowers > 0 ? `Abonné (${numFollowers})` : 'Abonné'}</Button>;
+    return (
+      <Button
+        onPress={async () => {
+          setIsFollowing(true);
+          await followActor(actorId);
+        }}
+      >
+        Suivre
+      </Button>
+    );
   }
 };
 

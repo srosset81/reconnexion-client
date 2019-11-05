@@ -175,7 +175,36 @@ export const followActor = async actorUri => {
 
     await postApi(`/actor/${user.userName}/outbox`, json);
 
-    Alert.alert('Merci !', 'Vous suivez maintenant cette action.');
+    Alert.alert('Message', 'Vous suivez maintenant cette action.');
+  }
+};
+
+export const unfollowActor = async actorUri => {
+  const user = await connectUser();
+
+  if (user) {
+    // Fetch all activities of logged user
+    const outbox = await fetchApi(user.url + '/outbox');
+
+    if (outbox.totalItems > 0) {
+      // Try to find a Follow activity for this actor
+      // If we don't, we will not send an Undo activity
+      const followActivity = outbox.orderedItems.find(
+        activity => activity.type === 'Follow' && activity.object && activity.object.id === actorUri
+      );
+
+      if (followActivity) {
+        const json = {
+          '@context': 'https://www.w3.org/ns/activitystreams',
+          type: 'Undo',
+          object: followActivity.id
+        };
+
+        await postApi(`/actor/${user.userName}/outbox`, json);
+
+        Alert.alert('Message', 'Vous ne suivez plus cet acteur.');
+      }
+    }
   }
 };
 
