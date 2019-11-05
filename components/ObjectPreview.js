@@ -33,7 +33,7 @@ const ObjectPreview = ({ objectId, navigation }) => {
             </View>
           )}
           {data.content && (
-            <LimitedView>
+            <LimitedView measureHeight={false} isOverflowing={data.content.length > 200}>
               <HTML
                 html={data.content}
                 tagsStyles={{

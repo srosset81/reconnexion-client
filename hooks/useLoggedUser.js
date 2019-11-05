@@ -21,7 +21,7 @@ const useLoggedUser = () => {
 
   useEffect(() => {
     load();
-  });
+  }, []);
 
   return { user, connect, disconnect };
 };

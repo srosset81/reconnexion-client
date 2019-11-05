@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchApi } from '../functions';
 
+const initialValues = { data: null, loading: true, error: null };
+
 const useQuery = endpoint => {
   const dispatch = useDispatch();
   const cachedQuery = useSelector(state => state.queries[endpoint]);
@@ -19,9 +21,9 @@ const useQuery = endpoint => {
     }
   };
 
-  useEffect(callFetch);
+  useEffect(callFetch, [endpoint]);
 
-  return { ...cachedQuery, retry: callFetch } || { data: null, loading: true, error: null, retry: callFetch };
+  return { ...initialValues, ...cachedQuery, retry: callFetch };
 };
 
 export default useQuery;

@@ -11,10 +11,11 @@ class LimitedView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      height: null
+      height: this.props.measureHeight ? null : this.props.maxHeight
     };
   }
 
+  // Only called if measureHeight is true
   onLayout = event => {
     const { height } = event.nativeEvent.layout;
     if (height > this.props.maxHeight) {
@@ -23,11 +24,11 @@ class LimitedView extends React.Component {
   };
 
   render() {
-    const { children, gradientHeight } = this.props;
+    const { children, measureHeight, isOverflowing, gradientHeight } = this.props;
     return (
-      <StyledView onLayout={this.onLayout} height={this.state.height}>
+      <StyledView onLayout={measureHeight ? null : this.onLayout} height={isOverflowing ? this.state.height : null}>
         {children}
-        {this.state.height && (
+        {isOverflowing && this.state.height && (
           <LinearGradient
             colors={['rgba(255,255,255,0)', 'rgba(255,255,255,1)']}
             style={{
@@ -45,6 +46,8 @@ class LimitedView extends React.Component {
 }
 
 LimitedView.defaultProps = {
+  measureHeight: true, // If true, we will call onLayout to measure the height of the child (can be slow)
+  isOverflowing: true, // Toggle gradient on or off
   maxHeight: 120,
   gradientHeight: 120
 };
