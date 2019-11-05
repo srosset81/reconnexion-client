@@ -12,15 +12,15 @@
     ],
     "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/creillois/icon.png",
     "primaryColor": "#bdc900",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/creillois/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "notification": {
-      "icon": "./assets/icon-notification.png",
+      "icon": "./assets/creillois/icon-notification.png",
       "color": "#bdc900",
       "iosDisplayInForeground": true
     },
@@ -37,7 +37,7 @@
     },
     "ios": {
       "bundleIdentifier": "app.reconnexion.payscreillois",
-      "icon": "./assets/icon-no-transparency.png",
+      "icon": "./assets/creillois/icon-no-transparency.png",
       "supportsTablet": false
     }
   }

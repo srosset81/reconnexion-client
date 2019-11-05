@@ -2,11 +2,17 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
+    "start:rcc": "expo start --config app-rcc.json",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "build:ios": "expo build:ios",
+    "build:ios:rcc": "expo build:ios --config app-rcc.json",
     "build:ios-simulator": "expo build:ios -t simulator",
-    "build:android": "expo build:android",
+    "build:ios-simulator:rcc": "expo build:ios -t simulator --config app-rcc.json",
+    "build:android:apk": "expo build:android",
+    "build:android:apk:rcc": "expo build:android --config app-rcc.json",
+    "build:android:aab": "expo build:android -t app-bundle",
+    "build:android:aab:rcc": "expo build:android -t app-bundle --config app-rcc.json",
     "eject": "expo eject",
     "optimize": "expo optimize",
     "prettier": "prettier --single-quote --print-width 120 --write --ignore-path .gitignore '{.,components,config,elements,hooks,screens}/**/*.js'"
