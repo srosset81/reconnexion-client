@@ -11,8 +11,8 @@ const NewsList = ({ parentId }) => {
   const { data, loading, error, retry } = useQuery(`${parentId}/created`);
   if (error)
     return (
-      <View>
-        <Text>{error.message}</Text>
+      <View style={{ padding: 15 }}>
+        <Text>{error === 'Network request failed' ? 'Problème de connexion Internet' : error}</Text>
         <Button onPress={retry}>Réessayer</Button>
       </View>
     );

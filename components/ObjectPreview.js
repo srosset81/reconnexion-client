@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, ImageBackground, TouchableWithoutFeedback, Text } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import { useSelector } from 'react-redux';
 import HTML from 'react-native-render-html';
 import moment from 'moment';
 
@@ -11,9 +10,10 @@ import { Block, LimitedView } from '../elements/layout';
 
 import { capitalizeFirstChar } from '../functions';
 import FollowButton from './FollowButton';
+import useQuery from "../hooks/useQuery";
 
 const ObjectPreview = ({ objectId, navigation, user }) => {
-  const data = useSelector(state => state.queries[objectId].data);
+  const { data } = useQuery(objectId, { cacheOnly: true });
   const viewDetails = () => navigation.navigate('Details', { objectId: data.id });
   return (
     <Block>
@@ -46,7 +46,6 @@ const ObjectPreview = ({ objectId, navigation, user }) => {
               />
             </LimitedView>
           )}
-          {data.tag && <Tags tags={data.tag} />}
         </View>
       </TouchableWithoutFeedback>
       {user && (

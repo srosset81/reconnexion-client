@@ -9,6 +9,7 @@ import useQuery from '../hooks/useQuery';
 import { SERVER_URL, MAIN_ACTOR, APP_NAME } from '../constants';
 import UserConnection from '../components/UserConnection';
 import useLoggedUser from '../hooks/useLoggedUser';
+import UserDataLoader from '../components/UserDataLoader';
 
 const ListScreen = ({ navigation }) => {
   const { data, loading, error } = useQuery(SERVER_URL + MAIN_ACTOR);
@@ -16,6 +17,7 @@ const ListScreen = ({ navigation }) => {
   const selectedTag = navigation.getParam('tag');
   return (
     <Page>
+      {user && <UserDataLoader user={user} />}
       <View style={{ paddingTop: 10, paddingLeft: 15, paddingBottom: 3 }}>
         <PageTitle center>{selectedTag ? `"${selectedTag}"` : APP_NAME}</PageTitle>
         <Text style={{ fontStyle: 'italic', fontSize: 12, textAlign: 'center', color: 'grey' }}>

@@ -15,6 +15,7 @@ import FollowButton from '../components/FollowButton';
 import { capitalizeFirstChar, openBrowser } from '../functions';
 import useQuery from '../hooks/useQuery';
 import useLoggedUser from '../hooks/useLoggedUser';
+import NumFollowers from '../components/NumFollowers';
 
 const CloseButton = styled(TouchableOpacity)`
   position: absolute;
@@ -80,6 +81,7 @@ const DetailsScreen = ({ navigation }) => {
             ) : (
               <View style={{ height: 7 }} />
             )}
+            <NumFollowers actor={data} />
             {user && <FollowButton actor={data} user={user} />}
             {data.url && <Button onPress={() => openBrowser(data.url)}>Plus d'informations</Button>}
           </View>

@@ -4,7 +4,7 @@ import styled from 'styled-components/native';
 
 const Container = styled(TouchableHighlight)`
   padding: 6px 8px;
-  background-color: ${props => props.color === 'grey' ? 'lightgrey' : '#bdc900'};
+  background-color: ${props => (props.color === 'grey' ? 'lightgrey' : '#bdc900')};
   border-radius: 4px;
   border: 1px solid #fff;
   margin-top: 5px;

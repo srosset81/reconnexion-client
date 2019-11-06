@@ -21,8 +21,7 @@
     },
     "notification": {
       "icon": "./assets/creillois/icon-notification.png",
-      "color": "#bdc900",
-      "iosDisplayInForeground": true
+      "color": "#bdc900"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStackNavigator, createAppContainer, NavigationActions } from 'react-navigation';
-import { Provider } from 'react-redux';
+import { Provider as ReduxProvider } from 'react-redux';
 import * as Font from 'expo-font';
 import { Notifications } from 'expo';
 import moment from 'moment';
@@ -78,9 +78,9 @@ class App extends React.Component {
     if (!this.state.fontsLoaded) return null;
 
     return (
-      <Provider store={store}>
+      <ReduxProvider store={store}>
         <AppContainer ref={nav => (this.navigator = nav)} />
-      </Provider>
+      </ReduxProvider>
     );
   }
 }

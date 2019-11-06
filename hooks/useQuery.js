@@ -3,8 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchApi } from '../functions';
 
 const initialValues = { data: null, loading: true, error: null };
+const defaultOptions = { cacheOnly: false };
 
-const useQuery = endpoint => {
+const useQuery = (endpoint, { cacheOnly } = defaultOptions) => {
   const dispatch = useDispatch();
   const cachedQuery = useSelector(state => state.queries[endpoint]);
 
@@ -16,12 +17,14 @@ const useQuery = endpoint => {
           dispatch({ type: 'QUERY_SUCCESS', endpoint, data });
         })
         .catch(error => {
-          dispatch({ type: 'QUERY_FAILURE', endpoint, error });
+          dispatch({ type: 'QUERY_FAILURE', endpoint, error: error.message });
         });
     }
   };
 
-  useEffect(callFetch, [endpoint]);
+  useEffect(() => {
+    if (!cacheOnly) callFetch();
+  }, []);
 
   return { ...initialValues, ...cachedQuery, retry: callFetch };
 };

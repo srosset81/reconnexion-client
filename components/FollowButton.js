@@ -7,7 +7,7 @@ const FollowButton = ({ actor, user, color }) => {
   const [isFollowing, setIsFollowing] = useState(false);
 
   const actorId = actor.type === 'Note' ? actor.attributedTo : actor.id;
-  const { data } = useQuery(user.url + '/following');
+  const { data } = useQuery(user.url + '/following', { cacheOnly: true });
   if (!isFollowing && data && data.includes(actorId)) setIsFollowing(true);
 
   if (isFollowing) {
