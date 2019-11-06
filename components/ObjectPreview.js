@@ -23,7 +23,7 @@ const ObjectPreview = ({ objectId, navigation, user }) => {
         </TouchableWithoutFeedback>
       )}
       <TouchableWithoutFeedback onPress={viewDetails}>
-        <View style={{ padding: 15, paddingBottom: 5 }}>
+        <View style={{ padding: 15 }}>
           <Title>{capitalizeFirstChar(data.name)}</Title>
           {data.type === 'Project' && (
             <View style={{ flexDirection: 'row', marginTop: 7, marginBottom: 7 }}>
