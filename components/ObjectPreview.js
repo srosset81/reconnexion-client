@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, ImageBackground, TouchableWithoutFeedback, Text } from 'react-native';
+import { View, TouchableWithoutFeedback, Text } from 'react-native';
+import { Image } from "react-native-expo-image-cache";
 import { withNavigation } from 'react-navigation';
 import HTML from 'react-native-render-html';
 import moment from 'moment';
@@ -19,7 +20,7 @@ const ObjectPreview = ({ objectId, navigation, user }) => {
     <Block>
       {data.image && (
         <TouchableWithoutFeedback onPress={viewDetails}>
-          <ImageBackground source={{ uri: data.image }} style={{ width: '100%', height: 120 }} resizeMode="cover" />
+          <Image uri={data.image} style={{ width: '100%', height: 120, resizeMode: 'cover' }} />
         </TouchableWithoutFeedback>
       )}
       <TouchableWithoutFeedback onPress={viewDetails}>

@@ -29,6 +29,7 @@
     "prettier": "^1.18.2",
     "react": "16.8.3",
     "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
+    "react-native-expo-image-cache": "^4.0.8",
     "react-native-render-html": "^4.1.2",
     "react-navigation": "^3.11.0expo -",
     "react-redux": "^7.1.0",

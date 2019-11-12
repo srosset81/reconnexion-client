@@ -1629,6 +1629,11 @@ cross-spawn@^6.0.0, cross-spawn@^6.0.5:
     shebang-command "^1.2.0"
     which "^1.2.9"
 
+crypto-js@^3.1.9-1:
+  version "3.1.9-1"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-3.1.9-1.tgz#fda19e761fc077e01ffbfdc6e9fdfc59e8806cd8"
+  integrity sha1-/aGedh/Ad+Af+/3G6f38WeiAbNg=
+
 css-color-keywords@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/css-color-keywords/-/css-color-keywords-1.0.0.tgz#fea2616dc676b2962686b3af8dbdbe180b244e05"
@@ -4457,6 +4462,14 @@ react-native-branch@2.2.5:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/react-native-branch/-/react-native-branch-2.2.5.tgz#4074dd63b4973e6397d9ce50e97b57c77a518e9d"
   integrity sha1-QHTdY7SXPmOX2c5Q6XtXx3pRjp0=
+
+react-native-expo-image-cache@^4.0.8:
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/react-native-expo-image-cache/-/react-native-expo-image-cache-4.0.8.tgz#51763f22c2684edfe8e7229481da45727f2268a1"
+  integrity sha512-2KVZnZsDQV9y8GAfZzF6sQQdEwzNVEbxaRIdeefRlIrNLS69ab93m+0gE2xO2gnBF2oc0dYWrW4w7NvFrw/Fdw==
+  dependencies:
+    crypto-js "^3.1.9-1"
+    lodash "^4.17.4"
 
 react-native-gesture-handler@1.2.1:
   version "1.2.1"
