@@ -20,7 +20,7 @@ const ObjectPreview = ({ objectId, navigation, user }) => {
     <Block>
       {data.image && (
         <TouchableWithoutFeedback onPress={viewDetails}>
-          <Image uri={data.image} style={{ width: '100%', height: 120, resizeMode: 'cover' }} />
+          <Image uri={data.image} style={{ width: '100%', height: 120, resizeMode: 'cover', backgroundColor: 'lightgrey' }} />
         </TouchableWithoutFeedback>
       )}
       <TouchableWithoutFeedback onPress={viewDetails}>

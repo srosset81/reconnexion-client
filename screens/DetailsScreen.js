@@ -42,10 +42,12 @@ const DetailsScreen = ({ navigation }) => {
             </CloseButton>
           </View>
           {data.image && (
-            <Image
-              uri={data.image}
-              style={{ width: '100%', height: 150, marginBottom: 15, resizeMode: 'cover' }}
-            />
+            <View style={{ paddingBottom: 15, backgroundColor: 'white' }}>
+              <Image
+                uri={data.image}
+                style={{ width: '100%', height: 150, resizeMode: 'cover', backgroundColor: 'lightgrey' }}
+              />
+            </View>
           )}
           <View style={{ padding: 15, paddingTop: 0, backgroundColor: 'white' }}>
             {data.type === 'Project' && (

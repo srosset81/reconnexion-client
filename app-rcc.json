@@ -10,7 +10,7 @@
       "ios",
       "android"
     ],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/rcc/icon.png",
     "primaryColor": "#bdc900",
@@ -32,12 +32,15 @@
     "android": {
       "package": "app.reconnexion.rcc",
       "googleServicesFile": "./google-services.json",
-      "permissions": []
+      "permissions": [],
+      "versionCode": 2,
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=app.reconnexion.rcc"
     },
     "ios": {
       "bundleIdentifier": "app.reconnexion.rcc",
       "icon": "./assets/rcc/icon-no-transparency.png",
-      "supportsTablet": false
+      "supportsTablet": false,
+      "appStoreUrl": "https://apps.apple.com/us/app/colibris-du-compi%C3%A9gnois/id1486010621?l=fr&ls=1"
     }
   }
 }

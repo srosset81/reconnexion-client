@@ -32,12 +32,15 @@
     "android": {
       "package": "app.reconnexion.payscreillois",
       "googleServicesFile": "./google-services.json",
-      "permissions": []
+      "permissions": [],
+      "versionCode": 2,
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=app.reconnexion.payscreillois"
     },
     "ios": {
       "bundleIdentifier": "app.reconnexion.payscreillois",
       "icon": "./assets/creillois/icon-no-transparency.png",
-      "supportsTablet": false
+      "supportsTablet": false,
+      "appStoreUrl": "https://apps.apple.com/fr/app/colibris-pays-creillois/id1477665404"
     }
   }
 }
