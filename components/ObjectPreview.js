@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, TouchableWithoutFeedback, Text } from 'react-native';
-import { Image } from "react-native-expo-image-cache";
+import { Image } from 'react-native-expo-image-cache';
 import { withNavigation } from 'react-navigation';
 import HTML from 'react-native-render-html';
 import moment from 'moment';
@@ -11,7 +11,7 @@ import { Block, LimitedView } from '../elements/layout';
 
 import { capitalizeFirstChar } from '../functions';
 import FollowButton from './FollowButton';
-import useQuery from "../hooks/useQuery";
+import useQuery from '../hooks/useQuery';
 
 const ObjectPreview = ({ objectId, navigation, user }) => {
   const { data } = useQuery(objectId, { cacheOnly: true });
@@ -20,7 +20,10 @@ const ObjectPreview = ({ objectId, navigation, user }) => {
     <Block>
       {data.image && (
         <TouchableWithoutFeedback onPress={viewDetails}>
-          <Image uri={data.image} style={{ width: '100%', height: 120, resizeMode: 'cover', backgroundColor: 'lightgrey' }} />
+          <Image
+            uri={data.image}
+            style={{ width: '100%', height: 120, resizeMode: 'cover', backgroundColor: 'lightgrey' }}
+          />
         </TouchableWithoutFeedback>
       )}
       <TouchableWithoutFeedback onPress={viewDetails}>
@@ -58,4 +61,4 @@ const ObjectPreview = ({ objectId, navigation, user }) => {
   );
 };
 
-export default withNavigation(ObjectPreview);
+export default memo(withNavigation(ObjectPreview));

@@ -22,7 +22,7 @@ export default class Page extends React.Component {
           style={{ width: '100%', height: '100%' }}
         >
           <StatusBar />
-          <StyledScrollView>{this.props.children}</StyledScrollView>
+          {this.props.noScroll ? this.props.children : <StyledScrollView>{this.props.children}</StyledScrollView>}
         </ImageBackground>
       </View>
     );

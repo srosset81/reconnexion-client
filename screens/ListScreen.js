@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, FlatList } from 'react-native';
 
 import Page from '../components/Page';
 import ObjectPreview from '../components/ObjectPreview';
@@ -11,22 +11,34 @@ import UserConnection from '../components/UserConnection';
 import useLoggedUser from '../hooks/useLoggedUser';
 import UserDataLoader from '../components/UserDataLoader';
 
+const PageHeader = ({ selectedTag }) => (
+  <View style={{ paddingTop: 10, paddingLeft: 15, paddingBottom: 3 }}>
+    <PageTitle center>{selectedTag ? `"${selectedTag}"` : APP_NAME}</PageTitle>
+    <Text style={{ fontStyle: 'italic', fontSize: 12, textAlign: 'center', color: 'grey' }}>
+      <UserConnection />
+    </Text>
+  </View>
+);
+
 const ListScreen = ({ navigation }) => {
   const { data, loading, error } = useQuery(SERVER_URL + MAIN_ACTOR);
   const { user } = useLoggedUser();
   const selectedTag = navigation.getParam('tag');
   return (
-    <Page>
+    <Page noScroll>
       {user && <UserDataLoader user={user} />}
-      <View style={{ paddingTop: 10, paddingLeft: 15, paddingBottom: 3 }}>
-        <PageTitle center>{selectedTag ? `"${selectedTag}"` : APP_NAME}</PageTitle>
-        <Text style={{ fontStyle: 'italic', fontSize: 12, textAlign: 'center', color: 'grey' }}>
-          <UserConnection />
-        </Text>
-      </View>
-      {loading && <Loader />}
+      {loading && <Loader fullScreen>Chargement des données...</Loader>}
       {error && <Text>{error.message}</Text>}
-      {user && data && data.map(objectId => <ObjectPreview key={objectId} objectId={objectId} user={user} />)}
+      {user && data && (
+        <FlatList
+          data={data}
+          renderItem={({ item: objectId }) => (
+            <ObjectPreview objectId={objectId} user={user} />
+          )}
+          ListHeaderComponent={() => <PageHeader selectedTag={selectedTag} />}
+          keyExtractor={objectId => objectId}
+        />
+      )}
     </Page>
   );
 };

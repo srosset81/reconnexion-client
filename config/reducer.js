@@ -66,7 +66,7 @@ const reducer = (state = { queries: [] }, action) => {
 
     case 'ADD_TO_DATA_LIST': {
       let query = state.queries[action.endpoint];
-      if( query && query.data ) query.data.push(action.value);
+      if (query && query.data) query.data.push(action.value);
 
       return {
         ...state,
@@ -79,7 +79,7 @@ const reducer = (state = { queries: [] }, action) => {
 
     case 'REMOVE_FROM_DATA_LIST': {
       let query = state.queries[action.endpoint];
-      if( query && query.data ) query.data = query.data.filter(value => value !== action.value);
+      if (query && query.data) query.data = query.data.filter(value => value !== action.value);
 
       return {
         ...state,

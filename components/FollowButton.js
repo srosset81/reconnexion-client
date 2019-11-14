@@ -1,9 +1,9 @@
 import React from 'react';
-import { useDispatch } from "react-redux";
+import { useDispatch } from 'react-redux';
 import { followActor, unfollowActor } from '../functions';
 import { Button } from '../elements/button';
 import useQuery from '../hooks/useQuery';
-import useForceUpdate from "../hooks/useForceUpdate";
+import useForceUpdate from '../hooks/useForceUpdate';
 
 const FollowButton = ({ actor, user, color }) => {
   const dispatch = useDispatch();
@@ -31,7 +31,7 @@ const FollowButton = ({ actor, user, color }) => {
         onPress={async () => {
           await followActor(actorId);
           await dispatch({ type: 'ADD_TO_DATA_LIST', endpoint: user.url + '/following', value: actorId });
-            // Not clean but for some reasons the data are not automatically updated
+          // Not clean but for some reasons the data are not automatically updated
           forceUpdate();
         }}
         color={color}

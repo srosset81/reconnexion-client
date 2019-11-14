@@ -202,7 +202,7 @@ export const unfollowActor = async actorUri => {
 
         await postApi(`/actor/${user.userName}/outbox`, json);
 
-        Alert.alert('Message', 'Vous ne suivez plus cet acteur.');
+        Alert.alert('Message', 'Vous ne suivez plus cette action.');
       }
     }
   }

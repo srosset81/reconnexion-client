@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, View, TouchableOpacity } from 'react-native';
-import { Image } from "react-native-expo-image-cache";
+import { Image } from 'react-native-expo-image-cache';
 import styled from 'styled-components/native';
 import { AntDesign } from '@expo/vector-icons';
 import HTML from 'react-native-render-html';
