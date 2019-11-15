@@ -10,7 +10,7 @@
       "ios",
       "android"
     ],
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/creillois/icon.png",
     "primaryColor": "#bdc900",
@@ -33,7 +33,7 @@
       "package": "app.reconnexion.payscreillois",
       "googleServicesFile": "./google-services.json",
       "permissions": [],
-      "versionCode": 2,
+      "versionCode": 3,
       "playStoreUrl": "https://play.google.com/store/apps/details?id=app.reconnexion.payscreillois"
     },
     "ios": {
