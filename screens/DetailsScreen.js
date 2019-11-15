@@ -15,7 +15,6 @@ import FollowButton from '../components/FollowButton';
 
 import { capitalizeFirstChar, openBrowser } from '../functions';
 import useQuery from '../hooks/useQuery';
-import useLoggedUser from '../hooks/useLoggedUser';
 import NumFollowers from '../components/NumFollowers';
 
 const CloseButton = styled(TouchableOpacity)`
@@ -27,7 +26,6 @@ const CloseButton = styled(TouchableOpacity)`
 
 const DetailsScreen = ({ navigation }) => {
   const { data, loading, error } = useQuery(navigation.getParam('objectId'));
-  const { user } = useLoggedUser();
 
   return (
     <Page>
@@ -84,7 +82,7 @@ const DetailsScreen = ({ navigation }) => {
               <View style={{ height: 7 }} />
             )}
             <NumFollowers actor={data} />
-            {user && <FollowButton actor={data} user={user} />}
+            <FollowButton actor={data} />
             {data.url && <Button onPress={() => openBrowser(data.url)}>Plus d'informations</Button>}
           </View>
           {data.type === 'Project' && <NewsList parentId={data.id} />}

@@ -13,7 +13,7 @@ import { capitalizeFirstChar } from '../functions';
 import FollowButton from './FollowButton';
 import useQuery from '../hooks/useQuery';
 
-const ObjectPreview = ({ objectId, navigation, user }) => {
+const ObjectPreview = ({ objectId, navigation }) => {
   const { data } = useQuery(objectId, { cacheOnly: true });
   const viewDetails = () => navigation.navigate('Details', { objectId: data.id });
   return (
@@ -52,9 +52,9 @@ const ObjectPreview = ({ objectId, navigation, user }) => {
           )}
         </View>
       </TouchableWithoutFeedback>
-      {user && (
+      {data.type !== 'Note' && (
         <View style={{ padding: 15, paddingTop: 0 }}>
-          <FollowButton actor={data} user={user} />
+          <FollowButton actor={data} />
         </View>
       )}
     </Block>

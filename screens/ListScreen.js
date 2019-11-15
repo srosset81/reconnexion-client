@@ -29,12 +29,10 @@ const ListScreen = ({ navigation }) => {
       {user && <UserDataLoader user={user} />}
       {loading && <Loader fullScreen>Chargement des données...</Loader>}
       {error && <Text>{error.message}</Text>}
-      {user && data && (
+      {data && (
         <FlatList
           data={data}
-          renderItem={({ item: objectId }) => (
-            <ObjectPreview objectId={objectId} user={user} />
-          )}
+          renderItem={({ item: objectId }) => <ObjectPreview objectId={objectId} />}
           ListHeaderComponent={() => <PageHeader selectedTag={selectedTag} />}
           keyExtractor={objectId => objectId}
         />
