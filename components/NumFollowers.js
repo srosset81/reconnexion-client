@@ -2,9 +2,8 @@ import React from 'react';
 import { Text } from 'react-native';
 import useQuery from '../hooks/useQuery';
 
-const NumFollowers = ({ actor }) => {
-  const actorId = actor.type === 'Note' ? actor.attributedTo : actor.id;
-  const { data } = useQuery(actorId + '/followers');
+const NumFollowers = ({ actorUri }) => {
+  const { data } = useQuery(actorUri + '/followers');
 
   if (data && data.length > 0) {
     return (

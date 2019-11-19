@@ -54,7 +54,7 @@ const ObjectPreview = ({ objectId, navigation }) => {
       </TouchableWithoutFeedback>
       {data.type !== 'Note' && (
         <View style={{ padding: 15, paddingTop: 0 }}>
-          <FollowButton actor={data} />
+          <FollowButton actorUri={data.id} />
         </View>
       )}
     </Block>

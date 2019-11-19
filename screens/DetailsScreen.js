@@ -26,6 +26,7 @@ const CloseButton = styled(TouchableOpacity)`
 
 const DetailsScreen = ({ navigation }) => {
   const { data, loading, error } = useQuery(navigation.getParam('objectId'));
+  const actorUri = data && (data.type === 'Note' ? data.attributedTo : data.id);
 
   return (
     <Page>
@@ -81,8 +82,8 @@ const DetailsScreen = ({ navigation }) => {
             ) : (
               <View style={{ height: 7 }} />
             )}
-            <NumFollowers actor={data} />
-            <FollowButton actor={data} />
+            {actorUri && <NumFollowers actorUri={actorUri} />}
+            {actorUri && <FollowButton actorUri={actorUri} />}
             {data.url && <Button onPress={() => openBrowser(data.url)}>Plus d'informations</Button>}
           </View>
           {data.type === 'Project' && <NewsList parentId={data.id} />}
