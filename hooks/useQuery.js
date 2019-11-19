@@ -24,7 +24,7 @@ const useQuery = (endpoint, { cacheOnly } = defaultOptions) => {
 
   useEffect(() => {
     if (!cacheOnly) callFetch();
-  }, []);
+  }, [endpoint]);
 
   return { ...initialValues, ...cachedQuery, retry: callFetch };
 };
