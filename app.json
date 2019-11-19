@@ -41,6 +41,18 @@
       "icon": "./assets/creillois/icon-no-transparency.png",
       "supportsTablet": false,
       "appStoreUrl": "https://apps.apple.com/fr/app/colibris-pays-creillois/id1477665404"
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "reconnexion",
+            "project": "reconnexion-client",
+            "authToken": "050cb733f9d04edfa37ceda650d60963268c2b93df114c9ea2aaf2c677f7dee4"
+          }
+        }
+      ]
     }
   }
 }

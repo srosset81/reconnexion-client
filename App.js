@@ -3,10 +3,13 @@ import { createStackNavigator, createAppContainer, NavigationActions } from 'rea
 import { Provider as ReduxProvider } from 'react-redux';
 import * as Font from 'expo-font';
 import { Notifications } from 'expo';
+import Constants from 'expo-constants';
+import * as Sentry from 'sentry-expo';
 import moment from 'moment';
 import 'moment/locale/fr';
 
 import store from './config/store';
+import { APP_NAME } from './constants';
 
 import ListScreen from './screens/ListScreen';
 import DetailsScreen from './screens/DetailsScreen';
@@ -49,8 +52,24 @@ class App extends React.Component {
 
     this.setState({ fontsLoaded: true });
 
+    this.initSentry();
+
     const notificationSubscription = Notifications.addListener(this.onReceiveNotification);
   }
+
+  initSentry = () => {
+    Sentry.init({
+      dsn: 'https://4664b87408184ea980b8d10d13b86b50@sentry.io/1826149',
+      enableInExpoDevelopment: true,
+      debug: true
+    });
+
+    Sentry.setRelease(Constants.manifest.revisionId);
+
+    Sentry.configureScope(function(scope) {
+      scope.setTag('appName', APP_NAME);
+    });
+  };
 
   onReceiveNotification = notification => {
     let route = {};

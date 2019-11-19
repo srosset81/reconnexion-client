@@ -41,6 +41,18 @@
       "icon": "./assets/rcc/icon-no-transparency.png",
       "supportsTablet": false,
       "appStoreUrl": "https://apps.apple.com/us/app/colibris-du-compi%C3%A9gnois/id1486010621?l=fr&ls=1"
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "reconnexion",
+            "project": "reconnexion-client",
+            "authToken": "050cb733f9d04edfa37ceda650d60963268c2b93df114c9ea2aaf2c677f7dee4"
+          }
+        }
+      ]
     }
   }
 }
