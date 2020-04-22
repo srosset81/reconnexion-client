@@ -5,7 +5,6 @@
     "description": "Découvrez les actions du groupe local Colibris 60 Pays Creillois et suivez celles qui vous intéressent",
     "scheme": "payscreillois",
     "privacy": "public",
-    "sdkVersion": "33.0.0",
     "platforms": [
       "ios",
       "android"

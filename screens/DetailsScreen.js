@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, View, TouchableOpacity } from 'react-native';
-import { Image } from 'react-native-expo-image-cache';
+// import { Image } from 'react-native-expo-image-cache';
 import styled from 'styled-components/native';
 import { AntDesign } from '@expo/vector-icons';
 import HTML from 'react-native-render-html';
@@ -40,14 +40,14 @@ const DetailsScreen = ({ navigation }) => {
               <AntDesign name="close" size={32} color="grey" />
             </CloseButton>
           </View>
-          {data.image && (
-            <View style={{ paddingBottom: 15, backgroundColor: 'white' }}>
-              <Image
-                uri={data.image}
-                style={{ width: '100%', height: 150, resizeMode: 'cover', backgroundColor: 'lightgrey' }}
-              />
-            </View>
-          )}
+          {/*{data.image && (*/}
+          {/*  <View style={{ paddingBottom: 15, backgroundColor: 'white' }}>*/}
+          {/*    <Image*/}
+          {/*      uri={data.image}*/}
+          {/*      style={{ width: '100%', height: 150, resizeMode: 'cover', backgroundColor: 'lightgrey' }}*/}
+          {/*    />*/}
+          {/*  </View>*/}
+          {/*)}*/}
           <View style={{ padding: 15, paddingTop: 0, backgroundColor: 'white' }}>
             {data.type === 'Project' && (
               <View style={{ flexDirection: 'row', marginBottom: 7 }}>

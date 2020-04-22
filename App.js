@@ -1,5 +1,6 @@
 import React from 'react';
-import { createStackNavigator, createAppContainer, NavigationActions } from 'react-navigation';
+import { createAppContainer, NavigationActions } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 import { Provider as ReduxProvider } from 'react-redux';
 import * as Font from 'expo-font';
 import { Notifications } from 'expo';
