@@ -4,8 +4,21 @@ import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 import { AsyncStorage, Linking, Platform, Alert } from 'react-native';
 import { SERVER_URL, LOCAL_IP } from './constants';
+import jsonld from "jsonld";
+import ontologies from "./ontologies.json";
 
 export const capitalizeFirstChar = str => str.charAt(0).toUpperCase() + str.substring(1);
+
+export const getJsonContext = (ontologies, mainOntology) => {
+  let pattern = {};
+  ontologies.forEach(ontology => (pattern[ontology.prefix] = ontology.url));
+  if (mainOntology) {
+    delete pattern[mainOntology];
+    return [ontologies.find(ontology => ontology.prefix === mainOntology).context, pattern];
+  } else {
+    return pattern;
+  }
+};
 
 export const getQueryParam = (name, url) => {
   name = name.replace(/[\[\]]/g, '\\$&');
@@ -112,8 +125,7 @@ export const postApi = async (endpoint, data) => {
 
 export const fetchApi = async endpoint => {
   const headers = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json'
+    Accept: 'application/ld+json'
   };
 
   const user = await getLoggedUser();
@@ -135,6 +147,33 @@ export const fetchApi = async endpoint => {
   }
 
   return await response.json();
+};
+
+export const fetchSparqlEndpoint = async query => {
+  const result = await fetch(formatUri('/sparql'), {
+    method: 'POST',
+    headers: {
+      accept: 'application/ld+json'
+    },
+    body: query
+  });
+
+  if( result.ok ) {
+    const json = await result.json();
+    const compactJson = await jsonld.compact(json, getJsonContext(ontologies, 'as'));
+
+    if (Object.keys(compactJson).length === 1) {
+      // If we have only the context, it means there is no match
+      return([]);
+    } else if (!compactJson['@graph']) {
+      // If we have several fields but no @graph, there is a single match
+      return([compactJson]);
+    } else {
+      return(compactJson['@graph']);
+    }
+  } else {
+    return false;
+  }
 };
 
 // https://docs.expo.io/versions/latest/guides/push-notifications/

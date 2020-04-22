@@ -5,9 +5,8 @@ import Page from '../components/Page';
 import ObjectPreview from '../components/ObjectPreview';
 import { PageTitle } from '../elements/text';
 import { Loader } from '../elements/ui';
-import useQuery from '../hooks/useQuery';
 import useSparqlQuery from '../hooks/useSparqlQuery';
-import { SERVER_URL, MAIN_ACTOR, APP_NAME } from '../constants';
+import { MAIN_ACTOR, APP_NAME } from '../constants';
 import { getActionsByGroup } from '../queries';
 import UserConnection from '../components/UserConnection';
 import useLoggedUser from '../hooks/useLoggedUser';
@@ -23,21 +22,20 @@ const PageHeader = ({ selectedTag }) => (
 );
 
 const ListScreen = ({ navigation }) => {
-  const data = useSparqlQuery(getActionsByGroup({ groupId: '60-pays-creillois' }));
-  // const { data, loading, error } = useQuery(SERVER_URL + MAIN_ACTOR);
+  const { data, loading, error } = useSparqlQuery(getActionsByGroup({ groupId: MAIN_ACTOR }));
   const { user } = useLoggedUser();
   const selectedTag = navigation.getParam('tag');
   return (
     <Page noScroll>
       {user && <UserDataLoader user={user} />}
-      {/*{loading && <Loader fullScreen>Chargement des données...</Loader>}*/}
-      {/*{error && <Text>{error.message}</Text>}*/}
+      {loading && <Loader fullScreen>Chargement des données...</Loader>}
+      {error && <Text>{error.message}</Text>}
       {data && (
         <FlatList
           data={data}
-          renderItem={({ item: object }) => <ObjectPreview object={object} />}
+          renderItem={({ item: objectId }) => <ObjectPreview objectId={objectId} />}
           ListHeaderComponent={() => <PageHeader selectedTag={selectedTag} />}
-          keyExtractor={objectId => objectId.id}
+          keyExtractor={objectId => objectId}
         />
       )}
     </Page>

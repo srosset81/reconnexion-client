@@ -1,4 +1,4 @@
-const reducer = (state = { queries: [] }, action) => {
+const reducer = (state = { queries: {}, sparqlQueries: {} }, action) => {
   switch (action.type) {
     case 'QUERY_TRIGGER': {
       return {
@@ -6,6 +6,20 @@ const reducer = (state = { queries: [] }, action) => {
         queries: {
           ...state.queries,
           [action.endpoint]: {
+            data: null,
+            loading: true,
+            error: null
+          }
+        }
+      };
+    }
+
+    case 'SPARQL_QUERY_TRIGGER': {
+      return {
+        ...state,
+        sparqlQueries: {
+          ...state.sparqlQueries,
+          [action.key]: {
             data: null,
             loading: true,
             error: null
@@ -50,12 +64,48 @@ const reducer = (state = { queries: [] }, action) => {
       }
     }
 
+    case 'SPARQL_QUERY_SUCCESS': {
+      let entities;
+      const itemsIds = action.data.map(item => {
+        entities = { ...entities, [item.id]: { data: item, loading: false, error: null } };
+        return item.id;
+      });
+      return {
+        ...state,
+        queries: {
+          ...state.queries,
+          ...entities,
+        },
+        sparqlQueries: {
+          [action.key]: {
+            data: itemsIds,
+            loading: false,
+            error: null
+          }
+        }
+      };
+    }
+
     case 'QUERY_FAILURE': {
       return {
         ...state,
         queries: {
           ...state.queries,
           [action.endpoint]: {
+            data: null,
+            loading: false,
+            error: action.error
+          }
+        }
+      };
+    }
+
+    case 'SPARQL_QUERY_FAILURE': {
+      return {
+        ...state,
+        sparqlQueries: {
+          ...state.sparqlQueries,
+          [action.key]: {
             data: null,
             loading: false,
             error: action.error
