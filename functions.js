@@ -2,6 +2,7 @@ import { Notifications } from 'expo';
 import * as WebBrowser from 'expo-web-browser';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
+import jwtDecode from 'jwt-decode';
 import { AsyncStorage, Linking, Platform, Alert } from 'react-native';
 import { SERVER_URL, LOCAL_IP } from './constants';
 import jsonld from "jsonld";
@@ -35,6 +36,8 @@ export const formatUri = uri => {
   }
   return uri.replace('localhost', LOCAL_IP);
 };
+
+export const wrapInArray = value => Array.isArray(value) ? value : [value];
 
 export const getLoggedUser = async () => {
   const user = await AsyncStorage.getItem('user');
@@ -77,21 +80,20 @@ export const connectUser = async () => {
   let user = await getLoggedUser();
 
   if (!user) {
-    // We double-encode the redirectUrl otherwise it breaks the CAS authentication server
+    // TODO double-encode the redirectUrl otherwise it breaks the CAS authentication server ?
     const callbackUrl = await openSession(
-      formatUri('/cas/login?redirectUrl=' + encodeURIComponent(encodeURIComponent(Constants.linkingUrl)))
+      formatUri('/auth?redirectUrl=' + encodeURIComponent(Constants.linkingUrl))
     );
 
     if (callbackUrl) {
-      // Extract the token and username from the callback url
-      user = {
-        token: getQueryParam('token', callbackUrl),
-        userName: getQueryParam('username', callbackUrl)
-      };
+      const token = getQueryParam('token', callbackUrl);
+      const decodedToken = jwtDecode(token);
 
-      user.url = SERVER_URL + '/actor/' + user.userName;
-
-      await AsyncStorage.setItem('user', JSON.stringify(user));
+      await AsyncStorage.setItem('user', JSON.stringify({
+        token,
+        userName: decodedToken.preferredUsername,
+        url: decodedToken.webId
+      }));
     }
   }
 
@@ -204,15 +206,16 @@ export const registerForPushNotifications = async () => {
 export const followActor = async actorUri => {
   const user = await connectUser();
   if (user) {
-    await registerForPushNotifications();
+    // await registerForPushNotifications();
 
     const json = {
       '@context': 'https://www.w3.org/ns/activitystreams',
       type: 'Follow',
+      actor: user.url,
       object: actorUri
     };
 
-    await postApi(`/actor/${user.userName}/outbox`, json);
+    await postApi(`/actors/${user.userName}/outbox`, json);
 
     Alert.alert('Message', 'Vous suivez maintenant cette action.');
   }
@@ -239,7 +242,7 @@ export const unfollowActor = async actorUri => {
           object: followActivity.id
         };
 
-        await postApi(`/actor/${user.userName}/outbox`, json);
+        await postApi(`/actors/${user.userName}/outbox`, json);
 
         Alert.alert('Message', 'Vous ne suivez plus cette action.');
       }

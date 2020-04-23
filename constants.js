@@ -8,7 +8,7 @@ export const statusColorMap = {
 // export const SERVER_URL = 'http://colibris.webflex.fr';
 export const SERVER_URL = 'http://localhost:3000';
 
-// export const MAIN_ACTOR = '/actor/colibris-du-compiegnois/created';
+// export const MAIN_ACTOR = '60-compiegnois';
 // export const APP_NAME = 'Colibris du Compiégnois';
 
 export const MAIN_ACTOR = '60-pays-creillois';

@@ -29,14 +29,25 @@ const reducer = (state = { queries: {}, sparqlQueries: {} }, action) => {
     }
 
     case 'QUERY_SUCCESS': {
-      if (action.data.type === 'OrderedCollection') {
-        let entities;
-        const itemsIds = action.data.orderedItems
-          ? action.data.orderedItems.map(item => {
+      if (action.data.type === 'OrderedCollection' || action.data.type === 'Collection') {
+        let entities = {}, itemsIds = null;
+
+        if( action.data.orderedItems ) {
+          itemsIds = action.data.orderedItems.map(item => {
+            entities = { ...entities, [item.id]: { data: item, loading: false, error: null } };
+            return item.id;
+          });
+        } else if( action.data.items ) {
+          itemsIds = action.data.items.map(item => {
+            if( typeof item === 'object' ) {
               entities = { ...entities, [item.id]: { data: item, loading: false, error: null } };
               return item.id;
-            })
-          : null;
+            } else {
+              return item;
+            }
+          });
+        }
+
         return {
           ...state,
           queries: {

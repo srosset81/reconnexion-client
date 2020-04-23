@@ -3,6 +3,7 @@ import { Text, View } from 'react-native';
 import styled from 'styled-components/native';
 import { withNavigation } from 'react-navigation';
 import useQuery from "../../hooks/useQuery";
+import { wrapInArray } from '../../functions';
 
 export const StyledTag = styled(Text)`
   color: white;
@@ -22,7 +23,7 @@ const Tag = ({ objectId }) => {
 const Tags = ({ tags, navigation }) =>
   tags && (
     <View style={{ flexDirection: 'row', marginTop: 7 }}>
-      {tags.map((tag, i) => (
+      {wrapInArray(tags).map((tag, i) => (
         // <TouchableWithoutFeedback key={i} onPress={() => navigation.push('List', { tag: tag.name })}>
         <Tag key={i} objectId={tag} />
         // </TouchableWithoutFeedback>
