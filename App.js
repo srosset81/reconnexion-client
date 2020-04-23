@@ -9,13 +9,18 @@ import * as Sentry from 'sentry-expo';
 import moment from 'moment';
 import 'moment/locale/fr';
 
-import store from './config/store';
+import { LdpProvider } from './api';
+import initStore from './config/initStore';
 import { APP_NAME } from './constants';
 
 import ListScreen from './screens/ListScreen';
 import DetailsScreen from './screens/DetailsScreen';
+import { reformatUri, getHeaders, getJsonContext } from './functions';
+import ontologies from './ontologies.json';
 
 moment.locale('fr');
+
+const store = initStore();
 
 const AppNavigator = createStackNavigator(
   {
@@ -99,7 +104,9 @@ class App extends React.Component {
 
     return (
       <ReduxProvider store={store}>
-        <AppContainer ref={nav => (this.navigator = nav)} />
+        <LdpProvider reformatUri={reformatUri} getHeaders={getHeaders} jsonContext={getJsonContext(ontologies, 'as')}>
+          <AppContainer ref={nav => (this.navigator = nav)} />
+        </LdpProvider>
       </ReduxProvider>
     );
   }

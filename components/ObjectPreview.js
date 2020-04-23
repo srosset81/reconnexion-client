@@ -11,10 +11,10 @@ import { Block, LimitedView } from '../elements/layout';
 
 import { capitalizeFirstChar } from '../functions';
 import FollowButton from './FollowButton';
-import useQuery from '../hooks/useQuery';
+import { useResource } from '../api';
 
 const ObjectPreview = ({ objectId, navigation }) => {
-  const { data } = useQuery(objectId, { cacheOnly: true });
+  const { data } = useResource(objectId, { cacheOnly: true });
   const viewDetails = () => navigation.navigate('Details', { objectId: data.id });
   return (
     <Block>

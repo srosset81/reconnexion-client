@@ -1,9 +1,9 @@
 import React from 'react';
 import { Text } from 'react-native';
-import useQuery from '../hooks/useQuery';
+import { useResource } from '../api';
 
 const NumFollowers = ({ actorUri }) => {
-  const { data } = useQuery(actorUri + '/followers');
+  const { data } = useResource(actorUri + '/followers');
 
   if (data && data.length > 0) {
     return (

@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import * as Sentry from 'sentry-expo';
-import useQuery from '../hooks/useQuery';
+import { useResource } from '../api';
 
 const UserDataLoader = ({ user }) => {
-  useQuery(user.url + '/following');
+  useResource(user.url);
+  useResource(user.url + '/following');
   useEffect(() => {
     Sentry.configureScope(scope => {
       scope.setUser({ username: user.userName });

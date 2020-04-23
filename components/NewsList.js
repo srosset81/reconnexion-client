@@ -5,10 +5,11 @@ import ObjectPreview from './ObjectPreview';
 import { PageTitle } from '../elements/text';
 import { Button } from '../elements/button';
 import { Loader } from '../elements/ui';
-import useQuery from '../hooks/useQuery';
+import { useSparqlQuery } from '../api';
+import { getNewsByAction } from '../queries';
 
-const NewsList = ({ parentId }) => {
-  const { data, loading, error, retry } = useQuery(`${parentId}/created`);
+const NewsList = ({ actionUri }) => {
+  const { data, loading, error, retry } = useSparqlQuery(getNewsByAction({ actionUri }));
   if (error)
     return (
       <View style={{ padding: 15 }}>

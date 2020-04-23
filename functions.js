@@ -5,8 +5,7 @@ import Constants from 'expo-constants';
 import jwtDecode from 'jwt-decode';
 import { AsyncStorage, Linking, Platform, Alert } from 'react-native';
 import { SERVER_URL, LOCAL_IP } from './constants';
-import jsonld from "jsonld";
-import ontologies from "./ontologies.json";
+import { fetchResource } from './api';
 
 export const capitalizeFirstChar = str => str.charAt(0).toUpperCase() + str.substring(1);
 
@@ -30,18 +29,34 @@ export const getQueryParam = (name, url) => {
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 };
 
-export const formatUri = uri => {
+export const reformatUri = uri => {
   if (!uri.startsWith('http')) {
     uri = SERVER_URL + uri;
   }
   return uri.replace('localhost', LOCAL_IP);
 };
 
-export const wrapInArray = value => Array.isArray(value) ? value : [value];
+export const wrapInArray = value => (Array.isArray(value) ? value : [value]);
 
 export const getLoggedUser = async () => {
   const user = await AsyncStorage.getItem('user');
   return user && JSON.parse(user);
+};
+
+export const getHeaders = async () => {
+  const user = await getLoggedUser();
+  if (user) {
+    return {
+      Authorization: 'Bearer ' + user.token
+    };
+  } else {
+    return {};
+  }
+};
+
+export const getResourceId = uri => {
+  const matches = uri.match(new RegExp('.*/(.*)'));
+  return matches && matches[1];
 };
 
 export const disconnectUser = async () => {
@@ -81,19 +96,20 @@ export const connectUser = async () => {
 
   if (!user) {
     // TODO double-encode the redirectUrl otherwise it breaks the CAS authentication server ?
-    const callbackUrl = await openSession(
-      formatUri('/auth?redirectUrl=' + encodeURIComponent(Constants.linkingUrl))
-    );
+    const callbackUrl = await openSession(formatUri('/auth?redirectUrl=' + encodeURIComponent(Constants.linkingUrl)));
 
     if (callbackUrl) {
       const token = getQueryParam('token', callbackUrl);
       const decodedToken = jwtDecode(token);
 
-      await AsyncStorage.setItem('user', JSON.stringify({
-        token,
-        userName: decodedToken.preferredUsername,
-        url: decodedToken.webId
-      }));
+      await AsyncStorage.setItem(
+        'user',
+        JSON.stringify({
+          token,
+          userName: decodedToken.preferredUsername,
+          url: decodedToken.webId
+        })
+      );
     }
   }
 
@@ -103,13 +119,11 @@ export const connectUser = async () => {
 export const postApi = async (endpoint, data) => {
   const headers = {
     Accept: 'application/json',
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    ...(await getHeaders())
   };
 
-  const user = await getLoggedUser();
-  if (user) headers['Authorization'] = 'Bearer ' + user.token;
-
-  const result = await fetch(formatUri(endpoint), {
+  const result = await fetch(reformatUri(endpoint), {
     method: 'POST',
     headers,
     body: JSON.stringify(data)
@@ -123,59 +137,6 @@ export const postApi = async (endpoint, data) => {
   }
 
   console.log('fetch result', result);
-};
-
-export const fetchApi = async endpoint => {
-  const headers = {
-    Accept: 'application/ld+json'
-  };
-
-  const user = await getLoggedUser();
-  if (user) headers['Authorization'] = 'Bearer ' + user.token;
-
-  let response = await fetch(formatUri(endpoint), {
-    method: 'GET',
-    headers
-  });
-
-  if (response.status === 401) {
-    await disconnectUser();
-    headers['Authorization'] = undefined;
-
-    response = await fetch(formatUri(endpoint), {
-      method: 'GET',
-      headers
-    });
-  }
-
-  return await response.json();
-};
-
-export const fetchSparqlEndpoint = async query => {
-  const result = await fetch(formatUri('/sparql'), {
-    method: 'POST',
-    headers: {
-      accept: 'application/ld+json'
-    },
-    body: query
-  });
-
-  if( result.ok ) {
-    const json = await result.json();
-    const compactJson = await jsonld.compact(json, getJsonContext(ontologies, 'as'));
-
-    if (Object.keys(compactJson).length === 1) {
-      // If we have only the context, it means there is no match
-      return([]);
-    } else if (!compactJson['@graph']) {
-      // If we have several fields but no @graph, there is a single match
-      return([compactJson]);
-    } else {
-      return(compactJson['@graph']);
-    }
-  } else {
-    return false;
-  }
 };
 
 // https://docs.expo.io/versions/latest/guides/push-notifications/
@@ -225,24 +186,25 @@ export const unfollowActor = async actorUri => {
   const user = await connectUser();
 
   if (user) {
+    const headers = await getHeaders();
+
     // Fetch all activities of logged user
-    const outbox = await fetchApi(user.url + '/outbox');
+    const outbox = await fetchResource({ uri: reformatUri(user.url + '/outbox'), additionalHeaders: headers });
 
     if (outbox.totalItems > 0) {
       // Try to find a Follow activity for this actor
       // If we don't, we will not send an Undo activity
       const followActivity = outbox.orderedItems.find(
-        activity => activity.type === 'Follow' && activity.object && activity.object.id === actorUri
+        activity => activity.type === 'Follow' && activity.object === actorUri
       );
 
       if (followActivity) {
-        const json = {
+        await postApi(`/actors/${user.userName}/outbox`, {
           '@context': 'https://www.w3.org/ns/activitystreams',
           type: 'Undo',
+          actor: user.url,
           object: followActivity.id
-        };
-
-        await postApi(`/actors/${user.userName}/outbox`, json);
+        });
 
         Alert.alert('Message', 'Vous ne suivez plus cette action.');
       }

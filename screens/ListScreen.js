@@ -5,7 +5,7 @@ import Page from '../components/Page';
 import ObjectPreview from '../components/ObjectPreview';
 import { PageTitle } from '../elements/text';
 import { Loader } from '../elements/ui';
-import useSparqlQuery from '../hooks/useSparqlQuery';
+import { useSparqlQuery } from '../api';
 import { MAIN_ACTOR, APP_NAME } from '../constants';
 import { getActionsByGroup } from '../queries';
 import UserConnection from '../components/UserConnection';
@@ -22,7 +22,7 @@ const PageHeader = ({ selectedTag }) => (
 );
 
 const ListScreen = ({ navigation }) => {
-  const { data, loading, error } = useSparqlQuery(getActionsByGroup({ groupId: MAIN_ACTOR }));
+  const { data, loading, error } = useSparqlQuery(getActionsByGroup({ groupUri: MAIN_ACTOR }));
   const { user } = useLoggedUser();
   const selectedTag = navigation.getParam('tag');
   return (

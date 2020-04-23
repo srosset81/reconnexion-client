@@ -7,14 +7,15 @@ import HTML from 'react-native-render-html';
 import moment from 'moment';
 
 import { PageTitle } from '../elements/text';
-import { Status, Tags, Location, Loader } from '../elements/ui';
+import { Status, Location, Loader } from '../elements/ui';
 import { Button } from '../elements/button';
 import Page from '../components/Page';
 import NewsList from '../components/NewsList';
 import FollowButton from '../components/FollowButton';
+import Tags from '../components/Tags';
 
 import { capitalizeFirstChar, openBrowser } from '../functions';
-import useQuery from '../hooks/useQuery';
+import { useResource } from '../api';
 import NumFollowers from '../components/NumFollowers';
 
 const CloseButton = styled(TouchableOpacity)`
@@ -25,7 +26,7 @@ const CloseButton = styled(TouchableOpacity)`
 `;
 
 const DetailsScreen = ({ navigation }) => {
-  const { data, loading, error } = useQuery(navigation.getParam('objectId'));
+  const { data, loading, error } = useResource(navigation.getParam('objectId'));
   const actorUri = data && (data.type === 'Note' ? data.attributedTo : data.id);
 
   return (
@@ -86,7 +87,7 @@ const DetailsScreen = ({ navigation }) => {
             {actorUri && <FollowButton actorUri={actorUri} />}
             {data.url && <Button onPress={() => openBrowser(data.url)}>Plus d'informations</Button>}
           </View>
-          {data.type === 'Project' && <NewsList parentId={data.id} />}
+          {data.type.includes('pair:Project') && <NewsList actionUri={data.id} />}
         </>
       )}
     </Page>
