@@ -203,7 +203,7 @@ export const unfollowActor = async actorUri => {
           '@context': 'https://www.w3.org/ns/activitystreams',
           type: 'Undo',
           actor: user.url,
-          object: followActivity.id
+          object: followActivity
         });
 
         Alert.alert('Message', 'Vous ne suivez plus cette action.');

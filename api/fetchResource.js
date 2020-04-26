@@ -1,5 +1,3 @@
-import { reformatUri } from '../functions';
-
 const fetchResource = async ({ uri, additionalHeaders }) => {
   const response = await fetch(uri, {
     method: 'GET',

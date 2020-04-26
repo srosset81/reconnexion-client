@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { View, TouchableWithoutFeedback, Text } from 'react-native';
-// import { Image } from 'react-native-expo-image-cache';
+import { Image } from 'react-native-expo-image-cache';
 import { withNavigation } from 'react-navigation';
 import HTML from 'react-native-render-html';
 import moment from 'moment';
@@ -18,14 +18,14 @@ const ObjectPreview = ({ objectId, navigation }) => {
   const viewDetails = () => navigation.navigate('Details', { objectId: data.id });
   return (
     <Block>
-      {/*{data.image && (*/}
-      {/*  <TouchableWithoutFeedback onPress={viewDetails}>*/}
-      {/*    <Image*/}
-      {/*      uri={data.image}*/}
-      {/*      style={{ width: '100%', height: 120, resizeMode: 'cover', backgroundColor: 'lightgrey' }}*/}
-      {/*    />*/}
-      {/*  </TouchableWithoutFeedback>*/}
-      {/*)}*/}
+      {data.image && (
+        <TouchableWithoutFeedback onPress={viewDetails}>
+          <Image
+            uri={data.image}
+            style={{ width: '100%', height: 120, resizeMode: 'cover', backgroundColor: 'lightgrey' }}
+          />
+        </TouchableWithoutFeedback>
+      )}
       <TouchableWithoutFeedback onPress={viewDetails}>
         <View style={{ padding: 15 }}>
           <Title>{capitalizeFirstChar(data.name)}</Title>

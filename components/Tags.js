@@ -17,7 +17,7 @@ export const StyledTag = styled(Text)`
 const Tag = ({ tagUri }) => {
   const { data, loading, error } = useResource(tagUri);
   if (loading || error) return null;
-  return <StyledTag>{data['pair:preferedLabel']}</StyledTag>;
+  return <StyledTag>{data['pair:preferedLabel'] || data['semapps:label']}</StyledTag>;
 };
 
 const Tags = ({ tags, navigation }) =>
