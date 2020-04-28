@@ -17,9 +17,27 @@ export const resourceFetchFailure = (uri, error) => ({
   error
 });
 
-export const sparqlQueryTrigger = queryKey => ({
+export const containerFetchTrigger = uri => ({
+  type: ACTION_TYPES.CONTAINER_FETCH_TRIGGER,
+  uri
+});
+
+export const containerFetchSuccess = (uri, data) => ({
+  type: ACTION_TYPES.CONTAINER_FETCH_SUCCESS,
+  uri,
+  data
+});
+
+export const containerFetchFailure = (uri, error) => ({
+  type: ACTION_TYPES.CONTAINER_FETCH_FAILURE,
+  uri,
+  error
+});
+
+export const sparqlQueryTrigger = (queryKey, query) => ({
   type: ACTION_TYPES.SPARQL_QUERY_TRIGGER,
-  queryKey
+  queryKey,
+  query
 });
 
 export const sparqlQuerySuccess = (queryKey, data) => ({
@@ -60,17 +78,5 @@ export const addToContainer = (containerUri, resourceUri) => ({
 export const removeFromContainer = (containerUri, resourceUri) => ({
   type: ACTION_TYPES.REMOVE_FROM_CONTAINER,
   containerUri,
-  resourceUri
-});
-
-export const addToCollection = (collectionUri, resourceUri) => ({
-  type: ACTION_TYPES.ADD_TO_COLLECTION,
-  collectionUri,
-  resourceUri
-});
-
-export const removeFromCollection = (collectionUri, resourceUri) => ({
-  type: ACTION_TYPES.REMOVE_FROM_COLLECTION,
-  collectionUri,
   resourceUri
 });

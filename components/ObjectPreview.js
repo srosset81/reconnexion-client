@@ -6,7 +6,7 @@ import HTML from 'react-native-render-html';
 import moment from 'moment';
 
 import { Title } from '../elements/text';
-import { Status, Tags, Location } from '../elements/ui';
+import { Status, Location } from '../elements/ui';
 import { Block, LimitedView } from '../elements/layout';
 
 import { capitalizeFirstChar } from '../functions';

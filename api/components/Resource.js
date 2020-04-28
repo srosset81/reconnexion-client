@@ -1,5 +1,5 @@
 import React from 'react';
-import useResource from './useResource';
+import useResource from '../hooks/useResource';
 
 const Resource = ({ uri, options, children }) => {
   const { loading, data, error } = useResource(uri, options);

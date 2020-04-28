@@ -1,13 +1,13 @@
 import React from 'react';
 import LdpContext from './LdpContext';
 
-const LdpProvider = ({ sparqlEndpoint = '/sparql', jsonContext, reformatUri, getHeaders, children }) => (
+const LdpProvider = ({ sparqlEndpoint = '/sparql', customFetch = fetch, jsonContext, getWebId, children }) => (
   <LdpContext.Provider
     value={{
       sparqlEndpoint,
+      customFetch,
       jsonContext,
-      reformatUri,
-      getHeaders
+      getWebId
     }}
   >
     {children}

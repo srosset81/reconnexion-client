@@ -1,15 +1,6 @@
 import produce from 'immer';
 import ACTION_TYPES from './actionTypes';
 
-const hasType = (data, type) => {
-  return (
-    data['@type'] === type ||
-    data['type'] === type ||
-    (Array.isArray(data['@type']) && data['@type'].includes(type)) ||
-    (Array.isArray(data['type']) && data['type'].includes(type))
-  );
-};
-
 const extractResources = data => {
   let resources = {},
     ids = [];
@@ -32,6 +23,7 @@ const ldpReducer = (state = { resources: {}, sparqlQueries: {} }, action) =>
   produce(state, newState => {
     switch (action.type) {
       case ACTION_TYPES.RESOURCE_FETCH_TRIGGER:
+      case ACTION_TYPES.CONTAINER_FETCH_TRIGGER:
         newState.resources[action.uri] = {
           data: null,
           loading: true,
@@ -40,49 +32,29 @@ const ldpReducer = (state = { resources: {}, sparqlQueries: {} }, action) =>
         break;
 
       case ACTION_TYPES.RESOURCE_FETCH_SUCCESS:
-        if (hasType(action.data, 'ldp:Container')) {
-          const [ids, resources] = extractResources(action.data['ldp:contains']);
-          newState.resources = {
-            ...newState.resources,
-            ...resources,
-            [action.uri]: {
-              data: ids,
-              loading: false,
-              error: null
-            }
-          };
-        } else if (hasType(action.data, 'Collection')) {
-          const [ids, resources] = extractResources(action.data.items);
-          newState.resources = {
-            ...newState.resources,
-            ...resources,
-            [action.uri]: {
-              data: ids,
-              loading: false,
-              error: null
-            }
-          };
-        } else if (hasType(action.data, 'OrderedCollection')) {
-          const [ids, resources] = extractResources(action.data.orderedItems);
-          newState.resources = {
-            ...newState.resources,
-            ...resources,
-            [action.uri]: {
-              data: ids,
-              loading: false,
-              error: null
-            }
-          };
-        } else {
-          newState.resources[action.uri] = {
-            data: action.data,
-            loading: false,
-            error: null
-          };
-        }
+        newState.resources[action.uri] = {
+          data: action.data,
+          loading: false,
+          error: null
+        };
         break;
 
+      case ACTION_TYPES.CONTAINER_FETCH_SUCCESS: {
+        const [ids, resources] = extractResources(action.data['ldp:contains']);
+        newState.resources = {
+          ...newState.resources,
+          ...resources,
+          [action.uri]: {
+            data: ids,
+            loading: false,
+            error: null
+          }
+        };
+        break;
+      }
+
       case ACTION_TYPES.RESOURCE_FETCH_FAILURE:
+      case ACTION_TYPES.CONTAINER_FETCH_FAILURE:
         newState.resources[action.uri] = {
           data: null,
           loading: false,
@@ -91,15 +63,25 @@ const ldpReducer = (state = { resources: {}, sparqlQueries: {} }, action) =>
         break;
 
       case ACTION_TYPES.SPARQL_QUERY_TRIGGER:
-        newState.resources[action.uri] = {
+        newState.sparqlQueries[action.queryKey] = {
           data: null,
           loading: true,
           error: null
         };
         break;
 
-      case ACTION_TYPES.SPARQL_QUERY_SUCCESS:
-        const [ids, resources] = extractResources(action.data);
+      case ACTION_TYPES.SPARQL_QUERY_SUCCESS: {
+        let results = [];
+        if (Object.keys(action.data).length === 1) {
+          // If we have only the context, it means there is no match
+          results = [];
+        } else if (!action.data['@graph']) {
+          // If we have several fields but no @graph, there is a single match
+          results = [action.data];
+        } else {
+          results = action.data['@graph'];
+        }
+        const [ids, resources] = extractResources(results);
         newState.resources = {
           ...newState.resources,
           ...resources
@@ -110,9 +92,10 @@ const ldpReducer = (state = { resources: {}, sparqlQueries: {} }, action) =>
           error: null
         };
         break;
+      }
 
       case ACTION_TYPES.SPARQL_QUERY_FAILURE:
-        newState.resources[action.uri] = {
+        newState.sparqlQueries[action.queryKey] = {
           data: null,
           loading: false,
           error: action.error

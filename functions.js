@@ -3,9 +3,8 @@ import * as WebBrowser from 'expo-web-browser';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 import jwtDecode from 'jwt-decode';
-import { AsyncStorage, Linking, Platform, Alert } from 'react-native';
+import { AsyncStorage, Linking, Platform } from 'react-native';
 import { SERVER_URL, LOCAL_IP } from './constants';
-import { fetchResource } from './api';
 
 export const capitalizeFirstChar = str => str.charAt(0).toUpperCase() + str.substring(1);
 
@@ -43,15 +42,20 @@ export const getLoggedUser = async () => {
   return user && JSON.parse(user);
 };
 
-export const getHeaders = async () => {
+export const getWebId = async () => {
   const user = await getLoggedUser();
-  if (user) {
-    return {
-      Authorization: 'Bearer ' + user.token
-    };
-  } else {
-    return {};
-  }
+  return user.url;
+};
+
+export const customFetch = async (uri, options = {}) => {
+  const user = await getLoggedUser();
+  return await fetch(reformatUri(uri), {
+    ...options,
+    headers: {
+      ...options.headers,
+      Authorization: user ? 'Bearer ' + user.token : undefined,
+    }
+  })
 };
 
 export const getResourceId = uri => {
@@ -96,7 +100,7 @@ export const connectUser = async () => {
 
   if (!user) {
     // TODO double-encode the redirectUrl otherwise it breaks the CAS authentication server ?
-    const callbackUrl = await openSession(formatUri('/auth?redirectUrl=' + encodeURIComponent(Constants.linkingUrl)));
+    const callbackUrl = await openSession(reformatUri('/auth?redirectUrl=' + encodeURIComponent(Constants.linkingUrl)));
 
     if (callbackUrl) {
       const token = getQueryParam('token', callbackUrl);
@@ -114,29 +118,6 @@ export const connectUser = async () => {
   }
 
   return user;
-};
-
-export const postApi = async (endpoint, data) => {
-  const headers = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-    ...(await getHeaders())
-  };
-
-  const result = await fetch(reformatUri(endpoint), {
-    method: 'POST',
-    headers,
-    body: JSON.stringify(data)
-  });
-
-  if (result.status === 401) {
-    await AsyncStorage.removeItem('user');
-
-    // TODO handle token refresh
-    console.log('Token has expired, cancelling...');
-  }
-
-  console.log('fetch result', result);
 };
 
 // https://docs.expo.io/versions/latest/guides/push-notifications/
@@ -158,58 +139,8 @@ export const registerForPushNotifications = async () => {
     return;
   }
 
-  // Get the token that uniquely identifies this device
-  const deviceToken = await Notifications.getExpoPushTokenAsync();
-
-  await postApi('/device', { deviceToken });
-};
-
-export const followActor = async actorUri => {
-  const user = await connectUser();
-  if (user) {
-    // await registerForPushNotifications();
-
-    const json = {
-      '@context': 'https://www.w3.org/ns/activitystreams',
-      type: 'Follow',
-      actor: user.url,
-      object: actorUri
-    };
-
-    await postApi(`/actors/${user.userName}/outbox`, json);
-
-    Alert.alert('Message', 'Vous suivez maintenant cette action.');
-  }
-};
-
-export const unfollowActor = async actorUri => {
-  const user = await connectUser();
-
-  if (user) {
-    const headers = await getHeaders();
-
-    // Fetch all activities of logged user
-    const outbox = await fetchResource({ uri: reformatUri(user.url + '/outbox'), additionalHeaders: headers });
-
-    if (outbox.totalItems > 0) {
-      // Try to find a Follow activity for this actor
-      // If we don't, we will not send an Undo activity
-      const followActivity = outbox.orderedItems.find(
-        activity => activity.type === 'Follow' && activity.object === actorUri
-      );
-
-      if (followActivity) {
-        await postApi(`/actors/${user.userName}/outbox`, {
-          '@context': 'https://www.w3.org/ns/activitystreams',
-          type: 'Undo',
-          actor: user.url,
-          object: followActivity
-        });
-
-        Alert.alert('Message', 'Vous ne suivez plus cette action.');
-      }
-    }
-  }
+  // Return the token that uniquely identifies this device
+  return await Notifications.getExpoPushTokenAsync();
 };
 
 export const openBrowser = async link => {

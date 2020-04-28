@@ -1,5 +1,5 @@
 import React from 'react';
-import useSparqlQuery from './useSparqlQuery';
+import useSparqlQuery from '../hooks/useSparqlQuery';
 
 const SparqlQuery = ({ query, children }) => {
   const { loading, data, error } = useSparqlQuery(query);

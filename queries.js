@@ -11,7 +11,7 @@ export const getActionsByGroup = ({ groupUri }) => ({
     WHERE {
       ?s1 ?p1 ?o1 .
       ?s1 a pair:Project .
-      ?s1 pair:involves "${groupUri}" .
+      ?s1 pair:involves <${groupUri}> .
       MINUS { ?s1 as:tag <http://localhost:3000/status/abandonnee> } .
     }
   `
@@ -21,7 +21,9 @@ export const getNewsByAction = ({ actionUri }) => ({
   key: `getNewsByAction/${getResourceId(actionUri)}`,
   query: `
     PREFIX as: <https://www.w3.org/ns/activitystreams#>
-    CONSTRUCT
+    CONSTRUCT {
+      ?s1 ?p1 ?o1 .
+    }
     WHERE {
       ?s1 ?p1 ?o1 .
       ?s1 a as:Note .

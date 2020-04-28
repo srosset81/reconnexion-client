@@ -1,10 +1,9 @@
 import React from 'react';
 import { Text } from 'react-native';
-import { useResource } from '../api';
+import { useCollection } from '../activitypub';
 
 const NumFollowers = ({ actorUri }) => {
-  const { data } = useResource(actorUri + '/followers');
-
+  const { data } = useCollection(actorUri + '/followers');
   if (data && data.length > 0) {
     return (
       <Text style={{ fontWeight: 'bold', textAlign: 'center', margin: 7 }}>

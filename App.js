@@ -15,7 +15,7 @@ import { APP_NAME } from './constants';
 
 import ListScreen from './screens/ListScreen';
 import DetailsScreen from './screens/DetailsScreen';
-import { reformatUri, getHeaders, getJsonContext } from './functions';
+import { customFetch, getWebId, getJsonContext } from './functions';
 import ontologies from './ontologies.json';
 
 moment.locale('fr');
@@ -104,7 +104,7 @@ class App extends React.Component {
 
     return (
       <ReduxProvider store={store}>
-        <LdpProvider reformatUri={reformatUri} getHeaders={getHeaders} jsonContext={getJsonContext(ontologies, 'as')}>
+        <LdpProvider customFetch={customFetch} getWebId={getWebId} jsonContext={getJsonContext(ontologies, 'as')}>
           <AppContainer ref={nav => (this.navigator = nav)} />
         </LdpProvider>
       </ReduxProvider>
