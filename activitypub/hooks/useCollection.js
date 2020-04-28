@@ -5,7 +5,7 @@ const useCollection = (uri, options = { cacheOnly: false }) => {
   const { fetch, data, loading, error, retry } = useLazyCollection(uri);
 
   useEffect(() => {
-    if( !options.cacheOnly ) {
+    if( !data && !options.cacheOnly ) {
       fetch()
     }
   }, [uri]);

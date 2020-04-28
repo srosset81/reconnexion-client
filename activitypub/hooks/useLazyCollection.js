@@ -10,23 +10,21 @@ const useLazyCollection = uri => {
   const customFetch = useFetch();
   const cachedCollection = useSelector(selectResource(uri));
 
-  const callFetch = useCallback(() => {
+  const callFetch = useCallback(async () => {
     dispatch(collectionFetchTrigger(uri));
-    return customFetch(uri, {
+    const response = await customFetch(uri, {
       headers: {
         Accept: 'application/ld+json'
       }
-    })
-      .then(response => response.json())
-      .then(data => {
-        dispatch(collectionFetchSuccess(uri, data));
-        return data;
-      })
-      .catch(error => {
-        console.error(error);
-        dispatch(collectionFetchFailure(uri, error.message));
-      });
-  }, [uri, cachedCollection, dispatch]);
+    });
+    if( response.ok ) {
+      const json = await response.json();
+      dispatch(collectionFetchSuccess(uri, json));
+      return json;
+    } else {
+      dispatch(collectionFetchFailure(uri, response.statusText));
+    }
+  }, [uri, dispatch]);
 
   return { ...initialValues, ...cachedCollection, fetch: callFetch, retry: callFetch };
 };

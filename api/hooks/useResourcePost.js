@@ -8,18 +8,21 @@ const useResourcePost = uri => {
   const customFetch = useFetch();
 
   const callFetch = useCallback(
-    resource =>
-      customFetch(uri, {
+    async resource => {
+      const response = await customFetch(uri, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/ld+json'
         },
         body: JSON.stringify(resource)
-      })
-        .then(response => {
-          const resourceId = response.headers.get('Location');
-          dispatch(addResource(resourceId, { id: resourceId, ...resource }));
-        }),
+      });
+
+      if( response.ok ) {
+        const resourceId = response.headers.get('Location');
+        dispatch(addResource(resourceId, { id: resourceId, ...resource }));
+        return resourceId;
+      }
+    },
     [uri, customFetch]
   );
 

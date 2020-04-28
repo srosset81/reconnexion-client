@@ -1,4 +1,4 @@
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { sparqlQueryTrigger, sparqlQuerySuccess, sparqlQueryFailure } from '../redux/actions';
 import { selectSparqlQuery } from '../redux/selectors';
@@ -12,29 +12,30 @@ const useSparqlQuery = query => {
   const { customFetch, sparqlEndpoint, jsonContext } = useContext(LdpContext);
   const cachedQuery = useSelector(selectSparqlQuery(query.key));
 
-  const callQuery = () => {
-    if (!cachedQuery) {
-      dispatch(sparqlQueryTrigger(query.key, query.query));
-      customFetch(sparqlEndpoint, {
-        method: 'POST',
-        headers: {
-          accept: 'application/ld+json'
-        },
-        body: query.query
-      })
-        .then(response => response.json())
-        .then(json => jsonContext ? jsonld.compact(json, jsonContext) : json)
-        .then(data => dispatch(sparqlQuerySuccess(query.key, data)))
-        .catch(error => {
-          console.error(error);
-          dispatch(sparqlQueryFailure(query.key, error.message));
-        });
+  const callQuery = useCallback(async () => {
+    dispatch(sparqlQueryTrigger(query.key));
+
+    const response = await customFetch(sparqlEndpoint, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/ld+json'
+      },
+      body: query.query
+    });
+
+    if( response.ok ) {
+      let json = await response.json();
+      if( jsonContext ) json = await jsonld.compact(json, jsonContext);
+      dispatch(sparqlQuerySuccess(query.key, json));
+      return json;
+    } else {
+      dispatch(sparqlQueryFailure(query.key, response.statusText));
     }
-  };
+  }, [query, sparqlEndpoint, jsonContext]);
 
   useEffect(() => {
-    callQuery();
-  }, [query.key]);
+    if( !cachedQuery ) callQuery();
+  }, [cachedQuery]);
 
   return { ...initialValues, ...cachedQuery, retry: callQuery };
 };

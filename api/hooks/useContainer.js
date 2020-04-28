@@ -11,28 +11,26 @@ const useContainer = (uri, options = { cacheOnly: false }) => {
   const customFetch = useFetch();
   const cachedContainer = useSelector(selectResource(uri));
 
-  const callFetch = useCallback(() => {
-    if (!cachedContainer) {
-      dispatch(containerFetchTrigger(uri));
-      return customFetch(uri, {
-        headers: {
-          Accept: 'application/ld+json'
-        }
-      })
-        .then(response => response.json())
-        .then(data => {
-          dispatch(containerFetchSuccess(uri, data));
-          return data;
-        })
-        .catch(error => {
-          console.error(error);
-          dispatch(containerFetchFailure(uri, error.message));
-        });
+  const callFetch = useCallback(async () => {
+    dispatch(containerFetchTrigger(uri));
+
+    const response = await customFetch(uri, {
+      headers: {
+        Accept: 'application/ld+json'
+      }
+    });
+
+    if( response.ok ) {
+      const json = await response.json();
+      dispatch(containerFetchSuccess(uri, json));
+      return json;
+    } else {
+      dispatch(containerFetchFailure(uri, response.statusText))
     }
   }, [uri, cachedContainer, dispatch]);
 
   useEffect(() => {
-    if (options.cacheOnly !== true) callFetch();
+    if (!cachedContainer && options.cacheOnly !== true) callFetch();
   }, [uri, options, callFetch]);
 
   return { ...initialValues, ...cachedContainer, retry: callFetch };

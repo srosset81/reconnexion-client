@@ -18,15 +18,16 @@ const FollowButton = ({ actorUri }) => {
   const dispatch = useDispatch();
   const { user } = useLoggedUser();
   const outbox = useOutbox();
-  const fetch = useFetch();
+  const customFetch = useFetch();
 
   const follow = useCallback(async () => {
     await outbox.post(followActivity(actorUri), () => {
       dispatch(addToCollection(user.url + '/following', actorUri));
       dispatch(addToCollection(actorUri + '/followers', user.url));
       const pushToken = registerForPushNotifications();
+      console.log('pushToken', pushToken);
       if( pushToken ) {
-        fetch('/devices', {
+        customFetch('/devices', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/ld+json',

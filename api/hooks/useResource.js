@@ -11,29 +11,27 @@ const useResource = (uri, options = { cacheOnly: false }) => {
   const customFetch = useFetch();
   const cachedResource = useSelector(selectResource(uri));
 
-  const callFetch = useCallback(() => {
-    if (!cachedResource) {
-      dispatch(resourceFetchTrigger(uri));
-      return customFetch(uri, {
-        headers: {
-          Accept: 'application/ld+json'
-        }
-      })
-        .then(response => response.json())
-        .then(data => {
-          dispatch(resourceFetchSuccess(uri, data));
-          return data;
-        })
-        .catch(error => {
-          console.error(error);
-          dispatch(resourceFetchFailure(uri, error.message));
-        });
+  const callFetch = useCallback(async () => {
+    dispatch(resourceFetchTrigger(uri));
+
+    const response = await customFetch(uri, {
+      headers: {
+        Accept: 'application/ld+json'
+      }
+    });
+
+    if( response.ok ) {
+      const json = await response.json();
+      dispatch(resourceFetchSuccess(uri, json));
+      return json;
+    } else {
+      dispatch(resourceFetchFailure(uri, response.statusText));
     }
   }, [uri, cachedResource, dispatch]);
 
   useEffect(() => {
-    if (options.cacheOnly !== true) callFetch();
-  }, [uri, options, callFetch]);
+    if (!cachedResource && options.cacheOnly !== true) callFetch();
+  }, [options, callFetch]);
 
   return { ...initialValues, ...cachedResource, retry: callFetch };
 };
